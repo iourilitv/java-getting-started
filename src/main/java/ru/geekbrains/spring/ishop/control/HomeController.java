@@ -18,7 +18,8 @@ public class HomeController {
 
     @GetMapping
     public String indexPage() {
-        return "redirect:/home";
+//        return "redirect:/home";
+        return "amin/home";
     }
 
     @GetMapping("/home")

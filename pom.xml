@@ -6,6 +6,7 @@
   <groupId>com.example</groupId>
   <artifactId>java-getting-started</artifactId>
   <version>1.0</version>
+  <packaging>jar</packaging>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -317,6 +318,8 @@ reason: class file for javax.annotation.meta.When not found" -->
   </dependencies>
 
   <build>
+<!--    <finalName>java-getting-started</finalName>-->
+    <!-- if not specified. The default value is ${artifactId}-${version}. -->
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

@@ -38,18 +38,28 @@ public class MailService implements INotifier {
     public void sendMessagesFromQueue() {
         new Thread(() -> {
             logger.info("******** sendMessageFromQueue() has been launched successfully *********");
+
+            int n = 0, v = 1000 * 1000 * 1000;// 1 event per second
+//            int n = 0, v = 1000 * 1000;// 1 000 events per second
+//            int n = 0, v = 1000;// 1 000 000 events per second - !!does not work
+
             while (true) {
-                if(!queueToSend.isEmpty()) {
-                    logger.info("******** sendMessageFromQueue() ***********\n" + "QueueToSend: " + queueToSend);
-                    AbstractMailMessage message = queueToSend.remove();
-                    logger.info("******** Trying to send the message from queue ***********\n" + "Message subject: " + message.getSubject());
-                    if(message instanceof OrderEmailMessage) {
-                        sendOrderMail((OrderEmailMessage) message);
+                if(n++ % v == 0) {
+                    logger.info("******** sendMessageFromQueue() counting " + n / v + " *********");
+
+                    if(!queueToSend.isEmpty()) {
+                        logger.info("******** sendMessageFromQueue() ***********\n" + "QueueToSend: " + queueToSend);
+                        AbstractMailMessage message = queueToSend.remove();
+                        logger.info("******** Trying to send the message from queue ***********\n" + "Message subject: " + message.getSubject());
+                        if(message instanceof OrderEmailMessage) {
+                            sendOrderMail((OrderEmailMessage) message);
+                        }
+
+                        //the same if() for another types of AbstractMailMessage
+
                     }
-
-                    //the same if() for another types of AbstractMailMessage
-
                 }
+
             }
         }).start();
 
@@ -94,7 +104,7 @@ public class MailService implements INotifier {
 
     private void takePauseInSec(int period) {
         int sec = period * 1000;
-        logger.info("******** takePauseInSec() ***********\n" + "Pause period(sec): " + sec);
+        logger.info("******** takePauseInSec() ***********\n" + "Pause period(sec): " + period);
         try {
             Thread.sleep(sec);
         } catch (InterruptedException e) {
